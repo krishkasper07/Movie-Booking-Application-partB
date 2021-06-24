@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import "./Home.css";
 import Header from "../../common/header/Header";
 import { withStyles } from "@material-ui/core/styles";
@@ -20,6 +19,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import React ,{ useState } from "react";
 
 const styles = (theme) => ({
   root: {
@@ -51,57 +51,53 @@ const styles = (theme) => ({
   },
 });
 
-class Home extends Component {
-  constructor() {
-    super();
-    this.state = {
-      movieName: "",
-      genres: [],
-      artists: [],
-    };
-  }
+const Home =(props)=> {
+//   constructor() {
+//     super();
+//     this.state = {
+//       movieName: "",
+//       genres: [],
+//       artists: [],
+//     };
+//   }
+ 
+const[movieName,setMovie]=useState('');
+const[artistName,setArtist]=useState([]);
+const[genreName,setGenre]=useState([]);
     
-    movieNameChangeHandler = (event) => {
-        this.setState({ movieName: event.target.value });
+    const movieNameChangeHandler = (event) => {
+        setMovie(event.target.value );
     };
 
-    genreSelectHandler = (event) => {
-        this.setState({ genres: event.target.value });
+    const genreSelectHandler = (event) => {
+        setGenre(event.target.value);
       };
     
-    artistSelectHandler = (event) => {
-    this.setState({ artists: event.target.value });
+    const artistSelectHandler = (event) => {
+        setArtist(event.target.value);
     };
 
-    releaseDateStartHandler = event => {
-      this.setState({ releaseDateStart: event.target.value });
-    }
-
-    releaseDateEndHandler = event => {
-      this.setState({ releaseDateEnd: event.target.value });
-    }
-
-    movieClickHandler = (movieId) => {
-        this.props.history.push("/movie/" + movieId);
+    const movieClickHandler = (movieId) => {
+        props.history.push("/movie/" + movieId);
       };
     
-      render() {
-        const { classes } = this.props;
+     
+        const { classes } = props;
         var filterMovie = moviesData.filter((movie) => {
           return (
-            movie.title === this.state.movieName ||
-            this.state.artists.includes(
+            movie.title.toLowerCase() === movieName.toLowerCase() ||
+             artistName.includes(
               movie.artists[0].first_name + " " + movie.artists[0].last_name
-            )
+            ) || genreName.includes(movie.genres)
           );
-        });
-        if (this.state.movieName.length === 0 && this.state.artists.length === 0) {
+             });
+        if (movieName.length === 0 && artistName.length === 0) {
           filterMovie = moviesData;
-        }
+    }
 
         return (
             <div>
-                <Header baseUrl={this.props.baseUrl} />
+                <Header baseUrl={props.baseUrl} />
                 <div id="upcoming-movies">
                     <span>Upcoming Movies</span>
                 </div>
@@ -124,7 +120,7 @@ class Home extends Component {
                     <div className="left">
                         <GridList cellHeight={350} cols={4} className={classes.gridListMain}>
                             {filterMovie.map((movie) => (
-                                <GridListTile onClick={() => this.movieClickHandler(movie.id)} className="released-movie-grid-item"
+                                <GridListTile onClick={() => movieClickHandler(movie.id)} className="released-movie-grid-item"
                                     key={"grid" + movie.id}>
                                     <img
                                         src={movie.poster_url}
@@ -155,7 +151,7 @@ class Home extends Component {
 
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="movieName">Movie Name</InputLabel>
-                                    <Input id="movieName" onChange={this.movieNameChangeHandler} />
+                                    <Input id="movieName" onChange={movieNameChangeHandler} />
                                 </FormControl>
 
                                 <FormControl className={classes.formControl}>
@@ -164,12 +160,12 @@ class Home extends Component {
                                         multiple
                                         input={<Input id="select-multiple-checkbox-genre" />}
                                         renderValue={selected => selected.join(',')}
-                                        value={this.state.genres}
-                                        onChange={this.genreSelectHandler}>
+                                        value={genreName}
+                                        onChange={genreSelectHandler}>
                                         <MenuItem value="0">None</MenuItem>
                                         {genres.map(genre => (
                                             <MenuItem key={genre.id} value={genre.name}>
-                                                <Checkbox checked={this.state.genres.indexOf(genre.name) > -1} />
+                                                <Checkbox checked={genreName.indexOf(genre.name) > -1} />
                                                 <ListItemText primary={genre.name} />
                                             </MenuItem>
                                         ))}
@@ -182,13 +178,14 @@ class Home extends Component {
                                         multiple
                                         input={<Input id="select-multiple-checkbox" />}
                                         renderValue={selected => selected.join(',')}
-                                        value={this.state.artists}
-                                        onChange={this.artistSelectHandler}
+                                        value={artistName}
+                                        onChange={artistSelectHandler}
                                     >
                                         <MenuItem value="0">None</MenuItem>
                                         {artists.map(artist => (
                                             <MenuItem key={artist.id} value={artist.first_name + " " + artist.last_name}>
-                                                <Checkbox checked={this.state.artists.indexOf(artist.first_name + " " + artist.last_name) > -1} />
+                                                {console.log(artist)}
+                                                <Checkbox checked={artistName.indexOf(artist.first_name + " " + artist.last_name) > -1} />
                                                 <ListItemText primary={artist.first_name + " " + artist.last_name} />
                                             </MenuItem>
                                         ))}
@@ -201,10 +198,8 @@ class Home extends Component {
                                         type="date"
                                         defaultValue=""
                                         InputLabelProps={{ shrink: true }}
-
                                     />
                                 </FormControl>
-
                                 <FormControl className={classes.formControl}>
                                     <TextField
                                         id="releaseDateEnd"
@@ -212,25 +207,20 @@ class Home extends Component {
                                         type="date"
                                         defaultValue=""
                                         InputLabelProps={{ shrink: true }}
-
                                     />
                                 </FormControl>
                                 <br /><br />
                                 <FormControl className={classes.formControl}>
                                     <Button  variant="contained" color="primary">
-
                                         APPLY
                                     </Button>
                                 </FormControl>
                             </CardContent>
                         </Card>
                     </div>
-
                 </div>
             </div>
-
         );
-    }
 }
 
 export default withStyles(styles)(Home)
