@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Home from './home/Home';
 import Details from './details/Details';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -6,10 +6,7 @@ import BookShow from '../screens/bookshow/BookShow';
 import moviesData from '../assets/moviesData';
 import Confirmation from './confirmation/Confirmation';
 
-class Controller extends Component {
-
-  
-  render() {
+const Controller =()=> {
     return (
       <Router>
         <div className="main-container">
@@ -20,7 +17,6 @@ class Controller extends Component {
         </div>
       </Router>
     )
-  }
 }
 
 export default Controller;
