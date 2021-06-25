@@ -80,9 +80,9 @@ const[genreName,setGenre]=useState([]);
     const movieClickHandler = (movieId) => {
         props.history.push("/movie/" + movieId);
       };
-    
      
-        const { classes } = props;
+
+      const { classes } = props;
         var filterMovie = moviesData.filter((movie) => {
           return (
             movie.title.toLowerCase() === movieName.toLowerCase() ||
@@ -94,7 +94,7 @@ const[genreName,setGenre]=useState([]);
         if (movieName.length === 0 && artistName.length === 0) {
           filterMovie = moviesData;
     }
-
+   
         return (
             <div>
                 <Header baseUrl={props.baseUrl} />
@@ -184,7 +184,6 @@ const[genreName,setGenre]=useState([]);
                                         <MenuItem value="0">None</MenuItem>
                                         {artists.map(artist => (
                                             <MenuItem key={artist.id} value={artist.first_name + " " + artist.last_name}>
-                                                {console.log(artist)}
                                                 <Checkbox checked={artistName.indexOf(artist.first_name + " " + artist.last_name) > -1} />
                                                 <ListItemText primary={artist.first_name + " " + artist.last_name} />
                                             </MenuItem>
